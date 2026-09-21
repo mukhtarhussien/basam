@@ -251,6 +251,7 @@ export const payments = pgTable("payments", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+<<<<<<< HEAD
 
 // ============================================================
 // إعدادات الموقع - تتحكم فيها من لوحة الأدمن (تبويب "الواجهة")
@@ -283,3 +284,5 @@ export const pageViews = pgTable("page_views", {
   visitorId: text("visitor_id").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+=======
+>>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162

@@ -102,7 +102,11 @@ function LoginForm() {
       <div className="text-center">
         <h1 className="text-xl font-bold">تسجيل الدخول</h1>
         <p className="text-sm opacity-60 mt-1">
+<<<<<<< HEAD
           لازم تسجل دخول عشان تكمل استخدام مكتبة سيد بسام (تجريبي)
+=======
+          اهلا بك، قم بتسجيل الدخول لاستخدام منصتنا!
+>>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162
         </p>
       </div>
 

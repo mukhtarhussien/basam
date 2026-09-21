@@ -10,8 +10,11 @@ import {
   payments,
   orders,
   notifications,
+<<<<<<< HEAD
   siteSettings,
   pageViews,
+=======
+>>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162
 } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -567,6 +570,7 @@ export async function markNotificationsRead() {
 
   revalidatePath("/", "layout");
 }
+<<<<<<< HEAD
 
 
 // ============================================================
@@ -832,3 +836,5 @@ export async function getSalesStats() {
     daily: dailyRows,
   };
 }
+=======
+>>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162
