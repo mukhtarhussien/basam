@@ -41,3 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 }
+
+//And if the bullets did not shake the air,
+//the mountains answered them with an echo
+//I LOVE TEPAAAAA
