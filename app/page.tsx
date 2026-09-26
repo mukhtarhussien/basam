@@ -43,7 +43,7 @@ export default async function Home() {
     <main className="min-h-screen bg-background text-foreground p-4 flex flex-col gap-5">
       {/* KillMyWeb verification challenge */}
       <span hidden>
-        gUDZTJz32tFueLFzrdER7flqaAuq6EEOd9Z5FgdzexAEIrJu
+        yDNMsxsMFc2BMoWIEzoxNiQlubcWvbpWONoBPecjB8swjuJi
       </span>
 
       <div className="flex items-center gap-3">
