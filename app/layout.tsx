@@ -4,10 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Nav from "@/components/nav";
 import Header from "@/components/header";
-<<<<<<< HEAD
 import PageTracker from "@/components/page-tracker";
-=======
->>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162
 
 const tajawal = Tajawal({
   variable: "--font-tajawal",
@@ -35,10 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
         <ThemeProvider>
-<<<<<<< HEAD
           <PageTracker />
-=======
->>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162
           <Header />
           <main className="flex-1 pb-24">{children}</main>
           <Nav />
