@@ -10,11 +10,8 @@ import {
   payments,
   orders,
   notifications,
-<<<<<<< HEAD
   siteSettings,
   pageViews,
-=======
->>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162
 } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -570,8 +567,6 @@ export async function markNotificationsRead() {
 
   revalidatePath("/", "layout");
 }
-<<<<<<< HEAD
-
 
 // ============================================================
 // إعدادات الواجهة (تبويب "الواجهة" بلوحة الأدمن)
@@ -708,11 +703,9 @@ export async function recordPageView(path: string, visitorId: string) {
     path.length > MAX_PATH_LENGTH ||
     visitorId.length > MAX_VISITOR_ID_LENGTH
   ) {
-    return; // نتجاهل بصمت - هذا استدعاء تحليلي، ما يستحق رمي خطأ للزائر
+    return;
   }
 
-  // نستثني صفحات الأدمن نفسها من الإحصائيات - زيارات الأدمن وهو
-  // يدير الموقع ما تمثل زوار حقيقيين وتضخّم الأرقام بدون فايدة
   if (path.startsWith("/admin")) return;
 
   await db.insert(pageViews).values({ path, visitorId });
@@ -786,8 +779,6 @@ export async function getSalesStats() {
   const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const monthStart = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  // نحسب بس الدفعات "confirmed" - المعلّقة لسه ما تأكدت، والمرفوضة
-  // ملغاة، فحسابهم كمبيعات فعلية يعطي رقم مضلل لصاحب المكتبة
   const confirmed = eq(payments.status, "confirmed");
 
   const [todaySum, weekSum, monthSum, todayOrders, dailyRows] = await Promise.all([
@@ -831,10 +822,7 @@ export async function getSalesStats() {
     monthTotal,
     todayOrdersCount: todayOrders[0]?.count ?? 0,
     monthOrdersCount: ordersCount,
-    // متوسط قيمة الطلب هذا الشهر - نتجنب القسمة على صفر
     avgOrderValue: ordersCount > 0 ? Math.round(monthTotal / ordersCount) : 0,
     daily: dailyRows,
   };
-}
-=======
->>>>>>> 2f8048a707ef51b6661a94b9d626885f7900c162
+                 }
