@@ -39,7 +39,51 @@ export type SiteSettings = {
   show_about: boolean;
 };
 
-export async function ensureDatabase() {
+export type Product = {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+  price: number;
+  image: string | null;
+  featured: boolean;
+  visible: boolean;
+  created_at: Date;
+};
+
+export type News = {
+  id: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string | null;
+  featured: boolean;
+  visible: boolean;
+  created_at: Date;
+};
+
+export type Offer = {
+  id: number;
+  title: string;
+  description: string;
+  image: string | null;
+  href: string;
+  visible: boolean;
+  created_at: Date;
+};
+
+export type Order = {
+  id: number;
+  customer_name: string;
+  phone: string;
+  note: string;
+  status: string;
+  created_at: Date;
+  product_name: string | null;
+  product_price: number | null;
+};
+
+export async function ensureDatabase(): Promise<boolean> {
   const q = db();
 
   if (!q) return false;
@@ -125,14 +169,14 @@ export async function getSettings(): Promise<SiteSettings | null> {
   return (rows[0] as SiteSettings | undefined) ?? null;
 }
 
-export async function getProducts() {
+export async function getProducts(): Promise<Product[]> {
   const q = db();
 
   if (!q) return [];
 
   await ensureDatabase();
 
-  return q`
+  const rows = await q`
     SELECT
       id,
       name,
@@ -147,16 +191,18 @@ export async function getProducts() {
     WHERE visible = true
     ORDER BY featured DESC, created_at DESC
   `;
+
+  return rows as Product[];
 }
 
-export async function getAllProducts() {
+export async function getAllProducts(): Promise<Product[]> {
   const q = db();
 
   if (!q) return [];
 
   await ensureDatabase();
 
-  return q`
+  const rows = await q`
     SELECT
       id,
       name,
@@ -170,9 +216,13 @@ export async function getAllProducts() {
     FROM products
     ORDER BY created_at DESC
   `;
+
+  return rows as Product[];
 }
 
-export async function getProduct(id: number) {
+export async function getProduct(
+  id: number,
+): Promise<Product | null> {
   const q = db();
 
   if (!q) return null;
@@ -196,17 +246,17 @@ export async function getProduct(id: number) {
     LIMIT 1
   `;
 
-  return rows[0] ?? null;
+  return (rows[0] as Product | undefined) ?? null;
 }
 
-export async function getNews() {
+export async function getNews(): Promise<News[]> {
   const q = db();
 
   if (!q) return [];
 
   await ensureDatabase();
 
-  return q`
+  const rows = await q`
     SELECT
       id,
       title,
@@ -220,16 +270,18 @@ export async function getNews() {
     WHERE visible = true
     ORDER BY featured DESC, created_at DESC
   `;
+
+  return rows as News[];
 }
 
-export async function getAllNews() {
+export async function getAllNews(): Promise<News[]> {
   const q = db();
 
   if (!q) return [];
 
   await ensureDatabase();
 
-  return q`
+  const rows = await q`
     SELECT
       id,
       title,
@@ -242,16 +294,18 @@ export async function getAllNews() {
     FROM news
     ORDER BY created_at DESC
   `;
+
+  return rows as News[];
 }
 
-export async function getOffers() {
+export async function getOffers(): Promise<Offer[]> {
   const q = db();
 
   if (!q) return [];
 
   await ensureDatabase();
 
-  return q`
+  const rows = await q`
     SELECT
       id,
       title,
@@ -264,16 +318,18 @@ export async function getOffers() {
     WHERE visible = true
     ORDER BY created_at DESC
   `;
+
+  return rows as Offer[];
 }
 
-export async function getAllOffers() {
+export async function getAllOffers(): Promise<Offer[]> {
   const q = db();
 
   if (!q) return [];
 
   await ensureDatabase();
 
-  return q`
+  const rows = await q`
     SELECT
       id,
       title,
@@ -285,16 +341,18 @@ export async function getAllOffers() {
     FROM offers
     ORDER BY created_at DESC
   `;
+
+  return rows as Offer[];
 }
 
-export async function getOrders() {
+export async function getOrders(): Promise<Order[]> {
   const q = db();
 
   if (!q) return [];
 
   await ensureDatabase();
 
-  return q`
+  const rows = await q`
     SELECT
       o.id,
       o.customer_name,
@@ -308,8 +366,10 @@ export async function getOrders() {
     LEFT JOIN products p ON p.id = o.product_id
     ORDER BY o.created_at DESC
   `;
+
+  return rows as Order[];
 }
 
 export function getDatabaseClient() {
   return db();
-  }
+}
