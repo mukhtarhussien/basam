@@ -1,11 +1,24 @@
-import { neon } from "@neondatabase/serverless";
+import {
+  neon,
+  type NeonQueryFunction,
+} from "@neondatabase/serverless";
 
-let client: ReturnType<typeof neon> | null = null;
+type DatabaseClient = NeonQueryFunction<false, false>;
 
-function db() {
+let client: DatabaseClient | null = null;
+
+function db(): DatabaseClient | null {
   const url = process.env.DATABASE_URL;
+
   if (!url) return null;
-  if (!client) client = neon(url);
+
+  if (!client) {
+    client = neon(url, {
+      fullResults: false,
+      arrayMode: false,
+    });
+  }
+
   return client;
 }
 
@@ -28,6 +41,7 @@ export type SiteSettings = {
 
 export async function ensureDatabase() {
   const q = db();
+
   if (!q) return false;
 
   await q`CREATE TABLE IF NOT EXISTS site_settings (
@@ -96,75 +110,206 @@ export async function ensureDatabase() {
 
 export async function getSettings(): Promise<SiteSettings | null> {
   const q = db();
+
   if (!q) return null;
+
   await ensureDatabase();
-  const rows = await q`SELECT * FROM site_settings WHERE id = 1 LIMIT 1`;
+
+  const rows = await q`
+    SELECT *
+    FROM site_settings
+    WHERE id = 1
+    LIMIT 1
+  `;
+
   return (rows[0] as SiteSettings | undefined) ?? null;
 }
 
 export async function getProducts() {
   const q = db();
+
   if (!q) return [];
+
   await ensureDatabase();
-  return q`SELECT id,name,category,description,price,image,featured,visible,created_at FROM products WHERE visible = true ORDER BY featured DESC,created_at DESC`;
+
+  return q`
+    SELECT
+      id,
+      name,
+      category,
+      description,
+      price,
+      image,
+      featured,
+      visible,
+      created_at
+    FROM products
+    WHERE visible = true
+    ORDER BY featured DESC, created_at DESC
+  `;
 }
 
 export async function getAllProducts() {
   const q = db();
+
   if (!q) return [];
+
   await ensureDatabase();
-  return q`SELECT id,name,category,description,price,image,featured,visible,created_at FROM products ORDER BY created_at DESC`;
+
+  return q`
+    SELECT
+      id,
+      name,
+      category,
+      description,
+      price,
+      image,
+      featured,
+      visible,
+      created_at
+    FROM products
+    ORDER BY created_at DESC
+  `;
 }
 
 export async function getProduct(id: number) {
   const q = db();
+
   if (!q) return null;
+
   await ensureDatabase();
-  const rows = await q`SELECT id,name,category,description,price,image,featured,visible,created_at FROM products WHERE id = ${id} AND visible = true LIMIT 1`;
+
+  const rows = await q`
+    SELECT
+      id,
+      name,
+      category,
+      description,
+      price,
+      image,
+      featured,
+      visible,
+      created_at
+    FROM products
+    WHERE id = ${id}
+      AND visible = true
+    LIMIT 1
+  `;
+
   return rows[0] ?? null;
 }
 
 export async function getNews() {
   const q = db();
+
   if (!q) return [];
+
   await ensureDatabase();
-  return q`SELECT id,title,excerpt,content,image,featured,visible,created_at FROM news WHERE visible = true ORDER BY featured DESC,created_at DESC`;
+
+  return q`
+    SELECT
+      id,
+      title,
+      excerpt,
+      content,
+      image,
+      featured,
+      visible,
+      created_at
+    FROM news
+    WHERE visible = true
+    ORDER BY featured DESC, created_at DESC
+  `;
 }
 
 export async function getAllNews() {
   const q = db();
+
   if (!q) return [];
+
   await ensureDatabase();
-  return q`SELECT id,title,excerpt,content,image,featured,visible,created_at FROM news ORDER BY created_at DESC`;
+
+  return q`
+    SELECT
+      id,
+      title,
+      excerpt,
+      content,
+      image,
+      featured,
+      visible,
+      created_at
+    FROM news
+    ORDER BY created_at DESC
+  `;
 }
 
 export async function getOffers() {
   const q = db();
+
   if (!q) return [];
+
   await ensureDatabase();
-  return q`SELECT id,title,description,image,href,visible,created_at FROM offers WHERE visible = true ORDER BY created_at DESC`;
+
+  return q`
+    SELECT
+      id,
+      title,
+      description,
+      image,
+      href,
+      visible,
+      created_at
+    FROM offers
+    WHERE visible = true
+    ORDER BY created_at DESC
+  `;
 }
 
 export async function getAllOffers() {
   const q = db();
+
   if (!q) return [];
+
   await ensureDatabase();
-  return q`SELECT id,title,description,image,href,visible,created_at FROM offers ORDER BY created_at DESC`;
+
+  return q`
+    SELECT
+      id,
+      title,
+      description,
+      image,
+      href,
+      visible,
+      created_at
+    FROM offers
+    ORDER BY created_at DESC
+  `;
 }
 
 export async function getOrders() {
   const q = db();
+
   if (!q) return [];
+
   await ensureDatabase();
+
   return q`
-    SELECT o.id,o.customer_name,o.phone,o.note,o.status,o.created_at,
-           p.name AS product_name,p.price AS product_price
+    SELECT
+      o.id,
+      o.customer_name,
+      o.phone,
+      o.note,
+      o.status,
+      o.created_at,
+      p.name AS product_name,
+      p.price AS product_price
     FROM orders o
-    LEFT JOIN products p ON p.id=o.product_id
+    LEFT JOIN products p ON p.id = o.product_id
     ORDER BY o.created_at DESC
   `;
 }
 
 export function getDatabaseClient() {
   return db();
-}
+  }
