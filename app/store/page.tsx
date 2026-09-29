@@ -1,0 +1,3 @@
+import { getProducts } from "@/lib/db";
+import StoreProductCard from "./product-card";
+export default async function StorePage(){const products=await getProducts();return <main className="shell py-10 md:py-14"><div className="reveal mb-8 max-w-3xl"><span className="text-xs font-black uppercase tracking-[.2em] text-[var(--brand)]">The Store</span><h1 className="mt-2 text-4xl font-black md:text-6xl">المتجر.</h1><p className="mt-4 text-sm leading-7 text-[var(--muted)] md:text-base">منتجات مرتبة بصرياً، معلومات واضحة، وطلب مباشر.</p></div><div className="stagger grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">{products.map((p:any)=><StoreProductCard key={p.id} product={p}/>)}</div></main>}
